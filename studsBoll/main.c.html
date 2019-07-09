@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
+<html>
+<head>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+<title>Exported from Notepad++</title>
+<style type="text/css">
+span {
+	font-family: 'DejaVu Sans Mono';
+	font-size: 10pt;
+	color: #C3BE98;
+}
+.sc0 {
+}
+.sc1 {
+	color: #679D47;
+}
+.sc2 {
+	color: #679D47;
+}
+.sc4 {
+	color: #DA5659;
+}
+.sc5 {
+	color: #F1E694;
+}
+.sc6 {
+	color: #7CA563;
+}
+.sc9 {
+	color: #8996A8;
+}
+.sc10 {
+	color: #B3935C;
+}
+.sc11 {
+}
+.sc16 {
+	color: #B3935C;
+}
+</style>
+</head>
+<body>
+<div style="float: left; white-space: pre; line-height: 1; background: #1A0F0B; "><span class="sc2">// gcc main.c -O3 -s -lglfw3 -lopengl32 -lglu32 -lgdi32
+//
+</span><span class="sc9">#include &lt;GL/glu.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;math.h&gt;
+</span><span class="sc0">
+</span><span class="sc9">#include &lt;stdio.h&gt;
+</span><span class="sc0">
+</span><span class="sc9">#define CIRCLE 300
+</span><span class="sc0">
+</span><span class="sc9">#pragma ("glw3.lib")
+#pragma ("opengl32.lib")
+#pragma ("glu32.lib")
+#pragma ("gdi32.lib")
+</span><span class="sc0">
+</span><span class="sc16">struct</span><span class="sc0"> </span><span class="sc11">food</span><span class="sc0"> </span><span class="sc11">f</span><span class="sc10">;</span><span class="sc0">
+
+</span><span class="sc16">struct</span><span class="sc0"> </span><span class="sc11">ball</span><span class="sc10">{</span><span class="sc0">
+    
+    </span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">collision</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">size</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">x</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">y</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">dx</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">dy</span><span class="sc10">;</span><span class="sc0">
+    
+</span><span class="sc10">};</span><span class="sc0">
+</span><span class="sc16">struct</span><span class="sc0"> </span><span class="sc11">food</span><span class="sc10">{</span><span class="sc0">
+    
+    </span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">collision</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">x</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">y</span><span class="sc10">;</span><span class="sc0">
+    
+</span><span class="sc10">};</span><span class="sc0">
+</span><span class="sc2">//
+//
+</span><span class="sc9">#define NROFBALLS 2
+</span><span class="sc2">//
+//
+</span><span class="sc9">#define XROW 15
+#define YROW 10
+</span><span class="sc2">//
+//
+</span><span class="sc9">#define LOWER_LIMIT -24.0f
+#define UPPER_LIMIT  24.0f
+#define RIGHT_LIMIT  36.0f
+#define  LEFT_LIMIT -36.0f
+</span><span class="sc2">//
+//
+</span><span class="sc16">struct</span><span class="sc0"> </span><span class="sc11">ball</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">NROFBALLS</span><span class="sc10">];</span><span class="sc0">
+</span><span class="sc2">//
+//
+</span><span class="sc16">void</span><span class="sc0"> </span><span class="sc11">collision</span><span class="sc10">(</span><span class="sc11">GLFWwindow</span><span class="sc10">*</span><span class="sc0"> </span><span class="sc11">window</span><span class="sc10">){</span><span class="sc0">
+    
+    </span><span class="sc5">for</span><span class="sc10">(</span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">&lt;</span><span class="sc0"> </span><span class="sc11">NROFBALLS</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc10">++){</span><span class="sc0">
+        
+        </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">x</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc11">LEFT_LIMIT</span><span class="sc0"> </span><span class="sc10">||</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">x</span><span class="sc0"> </span><span class="sc10">&gt;=</span><span class="sc0"> </span><span class="sc11">RIGHT_LIMIT</span><span class="sc0"> </span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">dx</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">dx</span><span class="sc10">;</span><span class="sc0">
+        </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">y</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc11">LOWER_LIMIT</span><span class="sc0"> </span><span class="sc10">||</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">y</span><span class="sc0"> </span><span class="sc10">&gt;=</span><span class="sc0"> </span><span class="sc11">UPPER_LIMIT</span><span class="sc0"> </span><span class="sc10">)</span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">dy</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">dy</span><span class="sc10">;</span><span class="sc0">
+        
+        </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">x</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">x</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">dx</span><span class="sc10">;</span><span class="sc0">
+        </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">y</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">dy</span><span class="sc10">;</span><span class="sc0">
+        
+    </span><span class="sc10">}</span><span class="sc0">
+    </span><span class="sc1">/*
+    pos[1] = pos[1] - dy;
+    pos[0] = pos[0] - dx;
+    */</span><span class="sc0">
+</span><span class="sc10">}</span><span class="sc0">
+</span><span class="sc2">//
+//
+</span><span class="sc16">void</span><span class="sc0"> </span><span class="sc11">keyBoard</span><span class="sc10">(</span><span class="sc11">GLFWwindow</span><span class="sc10">*</span><span class="sc0"> </span><span class="sc11">window</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">pos</span><span class="sc10">[]){</span><span class="sc0">
+    
+    </span><span class="sc16">static</span><span class="sc0"> </span><span class="sc16">unsigned</span><span class="sc0"> </span><span class="sc16">short</span><span class="sc0"> </span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0">
+    
+    </span><span class="sc2">//if(pos[1] &lt;= LOWER_LIMIT || pos[1] &gt;= UPPER_LIMIT) b.collision = 1;
+</span><span class="sc0">    </span><span class="sc2">//if(pos[0] &lt;= LEFT_LIMIT  || pos[0] &gt;= RIGHT_LIMIT) b.collision = 1;
+</span><span class="sc0">    
+    </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc11">glfwGetKey</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">GLFW_KEY_UP</span><span class="sc10">)</span><span class="sc0">    </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc11">GLFW_PRESS</span><span class="sc0"> </span><span class="sc10">&amp;&amp;</span><span class="sc0"> </span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">!=</span><span class="sc0"> </span><span class="sc4">1</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc11">glfwGetKey</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">GLFW_KEY_DOWN</span><span class="sc10">)</span><span class="sc0">  </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc11">GLFW_PRESS</span><span class="sc0"> </span><span class="sc10">&amp;&amp;</span><span class="sc0"> </span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">!=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">1</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc11">glfwGetKey</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">GLFW_KEY_LEFT</span><span class="sc10">)</span><span class="sc0">  </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc11">GLFW_PRESS</span><span class="sc0"> </span><span class="sc10">&amp;&amp;</span><span class="sc0"> </span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">!=</span><span class="sc0"> </span><span class="sc4">3</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc11">glfwGetKey</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">GLFW_KEY_RIGHT</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc11">GLFW_PRESS</span><span class="sc0"> </span><span class="sc10">&amp;&amp;</span><span class="sc0"> </span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">!=</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">3</span><span class="sc10">;</span><span class="sc0">
+    
+    </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">pos</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">pos</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc4">0.25f</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc5">else</span><span class="sc0"> </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">1</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">pos</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">pos</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc4">0.25f</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc5">else</span><span class="sc0"> </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">pos</span><span class="sc10">[</span><span class="sc4">0</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">pos</span><span class="sc10">[</span><span class="sc4">0</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc4">0.25f</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc5">else</span><span class="sc0"> </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc11">keyPressed</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">3</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">pos</span><span class="sc10">[</span><span class="sc4">0</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">pos</span><span class="sc10">[</span><span class="sc4">0</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc4">0.25f</span><span class="sc10">;</span><span class="sc0">
+    
+    </span><span class="sc1">/*if(glfwGetKey(window, GLFW_KEY_UP)    == GLFW_PRESS &amp;&amp; pos[1] &lt;= UPPER_LIMIT) pos[1] = pos[1] + 0.5f;
+    if(glfwGetKey(window, GLFW_KEY_DOWN)  == GLFW_PRESS &amp;&amp; pos[1] &gt;= LOWER_LIMIT) pos[1] = pos[1] - 0.5f;
+    if(glfwGetKey(window, GLFW_KEY_LEFT)  == GLFW_PRESS &amp;&amp; pos[0] &gt;= LEFT_LIMIT)  pos[0] = pos[0] - 0.5f;
+    if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS &amp;&amp; pos[0] &lt;= RIGHT_LIMIT) pos[0] = pos[0] + 0.5f;*/</span><span class="sc0">
+    
+</span><span class="sc10">}</span><span class="sc0">
+</span><span class="sc2">//
+//
+</span><span class="sc16">void</span><span class="sc0"> </span><span class="sc11">background</span><span class="sc10">(</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">downRow</span><span class="sc10">[],</span><span class="sc0"> </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">upperRow</span><span class="sc10">[]){</span><span class="sc0">
+    
+    </span><span class="sc11">glTranslatef</span><span class="sc10">(</span><span class="sc11">downRow</span><span class="sc10">[</span><span class="sc4">0</span><span class="sc10">],</span><span class="sc0"> </span><span class="sc11">downRow</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    
+    </span><span class="sc11">glBegin</span><span class="sc10">(</span><span class="sc11">GL_QUADS</span><span class="sc10">);</span><span class="sc0">
+    
+    </span><span class="sc11">glColor4f</span><span class="sc10">(</span><span class="sc4">1.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    
+    </span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc4">40.0f</span><span class="sc10">;</span><span class="sc0">
+    
+    </span><span class="sc2">//Draw lower row
+</span><span class="sc0">    </span><span class="sc5">for</span><span class="sc10">(;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc11">XROW</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc10">++){</span><span class="sc0">
+        
+        </span><span class="sc2">//Downrow
+</span><span class="sc0">        </span><span class="sc11">glVertex3f</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc10">,</span><span class="sc0">        </span><span class="sc10">-</span><span class="sc4">30.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glVertex3f</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc4">5</span><span class="sc10">,</span><span class="sc0">    </span><span class="sc10">-</span><span class="sc4">30.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glVertex3f</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc4">5</span><span class="sc10">,</span><span class="sc0">    </span><span class="sc10">-</span><span class="sc4">25.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glVertex3f</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc10">,</span><span class="sc0">        </span><span class="sc10">-</span><span class="sc4">25.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        
+        </span><span class="sc11">glVertex3f</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc10">,</span><span class="sc0">        </span><span class="sc10">+</span><span class="sc4">30.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glVertex3f</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc4">5</span><span class="sc10">,</span><span class="sc0">    </span><span class="sc10">+</span><span class="sc4">30.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glVertex3f</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc4">5</span><span class="sc10">,</span><span class="sc0">    </span><span class="sc10">+</span><span class="sc4">25.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glVertex3f</span><span class="sc10">(</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc10">,</span><span class="sc0">        </span><span class="sc10">+</span><span class="sc4">25.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        
+        </span><span class="sc11">inc</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">inc</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc4">5.0f</span><span class="sc10">;</span><span class="sc0">
+        
+    </span><span class="sc10">}</span><span class="sc0">
+    
+    </span><span class="sc11">glEnd</span><span class="sc10">();</span><span class="sc0">
+    </span><span class="sc11">glPopMatrix</span><span class="sc10">();</span><span class="sc0">
+    
+</span><span class="sc10">}</span><span class="sc0">
+</span><span class="sc2">//
+//
+</span><span class="sc16">void</span><span class="sc0"> </span><span class="sc11">generateFood</span><span class="sc10">(</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">foodPos</span><span class="sc10">[]){</span><span class="sc0">
+    
+    </span><span class="sc16">static</span><span class="sc0"> </span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">first</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">1</span><span class="sc10">;</span><span class="sc0">
+    
+    </span><span class="sc2">//Rendering
+</span><span class="sc0">    </span><span class="sc11">glTranslatef</span><span class="sc10">(</span><span class="sc11">foodPos</span><span class="sc10">[</span><span class="sc4">0</span><span class="sc10">],</span><span class="sc0"> </span><span class="sc11">foodPos</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    </span><span class="sc11">glBegin</span><span class="sc10">(</span><span class="sc11">GL_QUADS</span><span class="sc10">);</span><span class="sc0">
+    </span><span class="sc11">glColor4f</span><span class="sc10">(</span><span class="sc4">0.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    
+    </span><span class="sc11">glVertex3f</span><span class="sc10">(-</span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0">       </span><span class="sc10">-</span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    </span><span class="sc11">glVertex3f</span><span class="sc10">(+</span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0">       </span><span class="sc10">-</span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    </span><span class="sc11">glVertex3f</span><span class="sc10">(+</span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0">       </span><span class="sc10">+</span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    </span><span class="sc11">glVertex3f</span><span class="sc10">(-</span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0">       </span><span class="sc10">+</span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    
+    </span><span class="sc11">glEnd</span><span class="sc10">();</span><span class="sc0">
+    </span><span class="sc11">glPopMatrix</span><span class="sc10">();</span><span class="sc0">
+    
+</span><span class="sc10">}</span><span class="sc0">
+</span><span class="sc2">//
+//
+</span><span class="sc16">void</span><span class="sc0"> </span><span class="sc11">drawBalls</span><span class="sc10">(){</span><span class="sc0">
+    
+    </span><span class="sc2">//glTranslatef();
+</span><span class="sc0">    
+    </span><span class="sc5">for</span><span class="sc10">(</span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">&lt;</span><span class="sc0"> </span><span class="sc11">NROFBALLS</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc10">++)</span><span class="sc0"> </span><span class="sc11">glTranslatef</span><span class="sc10">(</span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">x</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">y</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    
+    </span><span class="sc11">glColor4f</span><span class="sc10">(</span><span class="sc4">1.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+    </span><span class="sc11">glBegin</span><span class="sc10">(</span><span class="sc11">GL_LINE_LOOP</span><span class="sc10">);</span><span class="sc0">
+    
+    
+    </span><span class="sc11">glEnd</span><span class="sc10">();</span><span class="sc0">
+    </span><span class="sc11">glPopMatrix</span><span class="sc10">();</span><span class="sc0">
+    
+</span><span class="sc10">}</span><span class="sc0">
+</span><span class="sc2">//
+//
+</span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">main</span><span class="sc10">(){</span><span class="sc0">
+    
+    </span><span class="sc11">glfwInit</span><span class="sc10">();</span><span class="sc0">
+    
+    </span><span class="sc2">//Create window
+</span><span class="sc0">    </span><span class="sc11">GLFWwindow</span><span class="sc10">*</span><span class="sc0"> </span><span class="sc11">window</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">glfwCreateWindow</span><span class="sc10">(</span><span class="sc4">800</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">600</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc6">"Snake"</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">NULL</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">NULL</span><span class="sc10">);</span><span class="sc0">
+    </span><span class="sc11">glfwMakeContextCurrent</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">);</span><span class="sc0">
+    
+    </span><span class="sc2">//Create camera
+</span><span class="sc0">    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">z</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">8.0f</span><span class="sc10">;</span><span class="sc0">
+    </span><span class="sc10">{</span><span class="sc0">
+        
+        </span><span class="sc11">glMatrixMode</span><span class="sc10">(</span><span class="sc11">GL_PROJECTION</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glLoadIdentity</span><span class="sc10">();</span><span class="sc0">
+        </span><span class="sc11">gluPerspective</span><span class="sc10">(</span><span class="sc4">120</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">800.0f</span><span class="sc10">/</span><span class="sc4">600.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.1f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">32.0f</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">gluLookAt</span><span class="sc10">(</span><span class="sc0">
+        </span><span class="sc4">0</span><span class="sc10">,</span><span class="sc0">  </span><span class="sc4">0</span><span class="sc10">,</span><span class="sc0">  </span><span class="sc11">z</span><span class="sc10">,</span><span class="sc0">
+        </span><span class="sc4">0</span><span class="sc10">,</span><span class="sc0">  </span><span class="sc4">0</span><span class="sc10">,</span><span class="sc0">  </span><span class="sc4">0</span><span class="sc10">,</span><span class="sc0">
+        </span><span class="sc4">0</span><span class="sc10">,</span><span class="sc0">  </span><span class="sc4">1</span><span class="sc10">,</span><span class="sc0">  </span><span class="sc4">0</span><span class="sc0">
+        </span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glMatrixMode</span><span class="sc10">(</span><span class="sc11">GL_MODELVIEW</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glLoadIdentity</span><span class="sc10">();</span><span class="sc0">
+        
+    </span><span class="sc10">}</span><span class="sc0">
+    
+    </span><span class="sc11">glScalef</span><span class="sc10">(</span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.5f</span><span class="sc10">);</span><span class="sc0">
+    
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">foodPos</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc4">0</span><span class="sc10">};</span><span class="sc0">
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">downRow</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc4">0</span><span class="sc10">};</span><span class="sc0">
+    </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">upperRow</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc4">0</span><span class="sc10">};</span><span class="sc0">
+    
+    </span><span class="sc5">for</span><span class="sc10">(</span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">&lt;</span><span class="sc0"> </span><span class="sc11">NROFBALLS</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc10">++){</span><span class="sc0">
+        
+        </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">x</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc4">0.25f</span><span class="sc10">;</span><span class="sc0">
+        </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0">
+        </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">collision</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0">
+        </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">size</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">1</span><span class="sc10">;</span><span class="sc0">
+        </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">dx</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0.25f</span><span class="sc10">;</span><span class="sc0">
+        </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">dy</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0.25f</span><span class="sc10">;</span><span class="sc0">
+        
+    </span><span class="sc10">}</span><span class="sc0">
+    
+    </span><span class="sc5">while</span><span class="sc10">(!</span><span class="sc11">glfwWindowShouldClose</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">)){</span><span class="sc0">
+        
+        </span><span class="sc11">collision</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc2">//keyBoard(window, pos);
+</span><span class="sc0">        
+        </span><span class="sc5">if</span><span class="sc10">(</span><span class="sc11">glfwGetKey</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">GLFW_KEY_ESCAPE</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc11">GLFW_PRESS</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc11">glfwSetWindowShouldClose</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">1</span><span class="sc10">);</span><span class="sc0">
+        
+        </span><span class="sc1">/*
+        if(glfwGetKey(window, GLFW_KEY_UP)    == GLFW_PRESS) pos[1] = pos[1] + 0.2f;
+        if(glfwGetKey(window, GLFW_KEY_DOWN)  == GLFW_PRESS) pos[1] = pos[1] - 0.2f;
+        if(glfwGetKey(window, GLFW_KEY_LEFT)  == GLFW_PRESS) pos[0] = pos[0] - 0.2f;
+        if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) pos[0] = pos[0] + 0.2f;
+        */</span><span class="sc0">
+        
+        </span><span class="sc2">//Rendering
+</span><span class="sc0">        </span><span class="sc11">glClear</span><span class="sc10">(</span><span class="sc11">GL_COLOR_BUFFER_BIT</span><span class="sc10">);</span><span class="sc0">
+        
+        </span><span class="sc11">glPushMatrix</span><span class="sc10">();</span><span class="sc0">
+        
+        </span><span class="sc2">//Drawing the ball
+</span><span class="sc0">        </span><span class="sc5">for</span><span class="sc10">(</span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">&lt;</span><span class="sc0"> </span><span class="sc11">NROFBALLS</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc10">++)</span><span class="sc0"> </span><span class="sc11">glTranslatef</span><span class="sc10">(</span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">x</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">balls</span><span class="sc10">[</span><span class="sc11">i</span><span class="sc10">].</span><span class="sc11">y</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        
+        </span><span class="sc11">glColor4f</span><span class="sc10">(</span><span class="sc4">1.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.5f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glBegin</span><span class="sc10">(</span><span class="sc11">GL_LINE_LOOP</span><span class="sc10">);</span><span class="sc0">
+        
+        </span><span class="sc5">for</span><span class="sc10">(</span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">ballNumber</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">ballNumber</span><span class="sc0"> </span><span class="sc10">&lt;</span><span class="sc0"> </span><span class="sc11">NROFBALLS</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">ballNumber</span><span class="sc10">++){</span><span class="sc0">
+            
+            </span><span class="sc5">for</span><span class="sc10">(</span><span class="sc16">int</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc11">CIRCLE</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc11">i</span><span class="sc10">++){</span><span class="sc0">
+                
+                </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">angle</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">2.0f</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc4">3.14f</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">i</span><span class="sc10">/</span><span class="sc4">300.0f</span><span class="sc10">);</span><span class="sc0">
+                </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">x</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">cos</span><span class="sc10">(</span><span class="sc11">angle</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc4">2.0f</span><span class="sc10">;</span><span class="sc0">
+                </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">sin</span><span class="sc10">(</span><span class="sc11">angle</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc4">2.0f</span><span class="sc10">;</span><span class="sc0">
+                </span><span class="sc11">glVertex3f</span><span class="sc10">(</span><span class="sc11">x</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">y</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">0.0f</span><span class="sc10">);</span><span class="sc0">
+                
+            </span><span class="sc10">}</span><span class="sc0">
+            
+        </span><span class="sc10">}</span><span class="sc0">
+        
+        </span><span class="sc1">/*glBegin(GL_QUADS);
+        
+        for(int i = 0; i &lt; b.size; i++){
+            
+            glVertex3f(-1.0f - i * 1.0f,    -1.0f, 0.0f);
+            glVertex3f(+1.0f + i * 1.0f,    -1.0f, 0.0f);
+            glVertex3f(+1.0f + i * 1.0f,    +1.0f, 0.0f);
+            glVertex3f(-1.0f - i * 1.0f,    +1.0f, 0.0f);
+            
+        }
+        */</span><span class="sc0">
+        </span><span class="sc11">glEnd</span><span class="sc10">();</span><span class="sc0">
+        </span><span class="sc11">glPopMatrix</span><span class="sc10">();</span><span class="sc0">
+        
+        </span><span class="sc2">//Drawing the background
+</span><span class="sc0">        </span><span class="sc11">background</span><span class="sc10">(</span><span class="sc11">downRow</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">upperRow</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc2">//generateFood(foodPos);
+</span><span class="sc0">        
+        </span><span class="sc11">glfwSwapBuffers</span><span class="sc10">(</span><span class="sc11">window</span><span class="sc10">);</span><span class="sc0">
+        </span><span class="sc11">glfwPollEvents</span><span class="sc10">();</span><span class="sc0">
+        
+    </span><span class="sc10">}</span><span class="sc0">
+    
+    </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">;</span><span class="sc0">
+    
+</span><span class="sc10">}</span><span class="sc0">
+
+</span></div></body>
+</html>
